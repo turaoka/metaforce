@@ -15,9 +15,18 @@ module Metaforce
         #   client.list_metadata('CustomObject', 'ApexComponent')
         #   #=> ["ContractContactRole", "Solution", "Invoice_Statements__c", ... ]
         def list_metadata(*args)
-          queries = args.map(&:to_s).map(&:camelize).map { |t| {:type => t} }
+          queries = args
+          .map(&:to_s)
+          .map { |e| e.scan /[^\/]+/ }
+          .map do |folder, type|
+            if type.nil?
+              {type: folder.camelize}
+            else
+              {type: type.camelize, folder: folder}
+            end
+          end
           request :list_metadata do |soap|
-            soap.body = { :queries => queries }
+            soap.body = {:queries => queries}
           end
         end
 
