@@ -13,6 +13,15 @@ module Metaforce
       def inspect
         "#<#{self.class} @options=#{@options.inspect}>"
       end
+      
+      def server_url
+        unless @server_url
+          url = URI @options[:server_url]
+          url.path = ''
+          @server_url = url.to_s
+        end
+        @server_url
+      end
     end
   end
 end

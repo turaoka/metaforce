@@ -85,8 +85,8 @@ module Metaforce
       File.join(wsdl, 'metadata.xml')
     end
 
-    def endpoint
-      "https://#{host}/services/Soap/u/#{api_version}"
+    def endpoint(prefered_host=nil)
+      "https://#{prefered_host || host}/services/Soap/u/#{api_version}"
     end
 
     def wsdl

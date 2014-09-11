@@ -1,7 +1,8 @@
 module Metaforce
   class Login
-    def initialize(username, password, security_token=nil)
+    def initialize(username, password, security_token=nil, host=nil)
       @username, @password, @security_token = username, password, security_token
+      @host = host || 'login.salesforce.com'
     end
 
     # Public: Perform the login request.
@@ -22,8 +23,12 @@ module Metaforce
     # Internal: Savon client.
     def client
       @client ||= Savon.client(Metaforce.configuration.partner_wsdl) do |wsdl|
-        wsdl.endpoint = Metaforce.configuration.endpoint
+        wsdl.endpoint = Metaforce.configuration.endpoint(host)
       end.tap { |client| client.http.auth.ssl.verify_mode = :none }
+    end
+    
+    def host
+      @host
     end
 
     # Internal: Usernamed passed in from options.
